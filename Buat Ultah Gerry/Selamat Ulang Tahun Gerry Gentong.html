@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            height: 100vh;
+            position: relative;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ff6b9d, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+        }
+
+        /* Start Screen */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+
+        .start-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #ff9a9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(255, 107, 157, 0.5);
+        }
+
+        .start-btn {
+            padding: 1.5rem 3rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 20px 40px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 30px 60px rgba(255, 107, 157, 0.6);
+        }
+
+        .start-btn:active {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        /* Cat Chase Game */
+        .cat-game {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 50%, #fecfef 100%);
+        }
+
+        .cat {
+            width: 20vw;
+            height: 20vw;
+            max-width: 180px;
+            max-height: 180px;
+            min-width: 100px;
+            min-height: 100px;
+            background: url('Foto dan Video/_Save___follow_me____-removebg-preview.png') center/contain no-repeat;
+            position: absolute;
+            cursor: none;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            filter: drop-shadow(0 20px 40px rgba(255, 107, 157, 0.4));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .cat.caught {
+            animation: caughtAnim 0.5s ease-out forwards;
+        }
+
+        /* Love Hearts Transition */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
+            display: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff6b9d;
+            pointer-events: none;
+            animation: heartFloat 3s ease-out forwards;
+        }
+
+        /* Birthday Screen */
+        .birthday-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .birthday-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #ff4757);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            animation: bounceIn 1s ease-out;
+        }
+
+        .birthday-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: #333;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        /* Photo Gallery - Polaroid Style */
+        .photo-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 12px 12px 35px 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: rotate(var(--rotate));
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            z-index: 10;
+        }
+
+        .polaroid:nth-child(1) { --rotate: -5deg; }
+        .polaroid:nth-child(2) { --rotate: 3deg; }
+        .polaroid:nth-child(3) { --rotate: -2deg; }
+
+        .polaroid img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        /* Animations */
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px #ff6b9d); }
+            to { filter: drop-shadow(0 0 30px #ff6b9d); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        @keyframes caughtAnim {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.5) rotate(180deg); }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes heartFloat {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: #ff6b9d;
+            font-size: 1.5rem;
+            animation: floatHeart 6s linear infinite;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .photo-gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Floating Hearts Background -->
+    <div class="floating-elements" id="floatingElements"></div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+        <h1 class="start-title">🎂 SELAMAT ULANG TAHUN GERRY 🎂</h1>
+        <button class="start-btn" id="startBtn">Pencet Disini! 😻</button>
+    </div>
+
+    <!-- Cat Chase Game -->
+    <div class="cat-game" id="catGame">
+        <div class="cat" id="cat"></div>
+        <h2 style="position: absolute; top: 5vh; color: #ff6b9d; font-size: clamp(1.5rem, 5vw, 2.5rem); z-index: 1001;">Tangkap Gerry! 🐾</h2>
+    </div>
+
+    <!-- Love Hearts Transition -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Birthday Screen -->
+    <div class="birthday-screen" id="birthdayScreen">
+        <h1 class="birthday-title">HAPPY BIRTHDAY!</h1>
+        <p class="birthday-message">
+            Hai, ini depik.. Aku mau ngucapin sesuatu.. Semoga di hari spesialmu ini penuh dengan kebahagiaan dan momen-momen indah yang tak terlupakan! 
+            🎉🥳🎂 Terima kasih sudah menjadi bagian dari hidup aku. Semoga semua ekspektasimu tercapai dan di ulang tahunmu ini membawa berkah berlimpah! 💖✨
+        </p>        <div class="photo-gallery">
+            <div class="polaroid"><img src="Foto dan Video/Kucing 1.jpeg" alt="Kucing 1"></div>
+            <div class="polaroid"><img src="Foto dan Video/Kucing 2.jpeg" alt="Kucing 2"></div>
+            <div class="polaroid"><img src="Foto dan Video/Kucing 3.jpeg" alt="Kucing 3"></div>
+        </div>    </div>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Floating Hearts Background
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingElements');
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerHTML = '💖';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 6000);
+            }, 300);
+        }
+
+        // Start Button
+        const startBtn = document.getElementById('startBtn');
+        const startScreen = document.getElementById('startScreen');
+        const catGame = document.getElementById('catGame');
+        const cat = document.getElementById('cat');
+
+        startBtn.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            catGame.style.display = 'flex';
+            startCatChase();
+        });
+
+        // Cat Chase Game
+        let gameActive = true;
+        let catX = 50;
+        let catY = 50;
+
+        function startCatChase() {
+            cat.style.left = '50%';
+            cat.style.top = '50%';
+            moveCat();
+        }
+
+        function moveCat() {
+            if (!gameActive) return;
+            
+            const catSize = Math.min(window.innerWidth * 0.2, 180, 100);
+            catX = Math.random() * (window.innerWidth - catSize);
+            catY = Math.random() * (window.innerHeight - catSize);
+            
+            cat.style.left = catX + 'px';
+            cat.style.top = catY + 'px';
+        }
+
+        cat.addEventListener('click', () => {
+            cat.classList.add('caught');
+            gameActive = false;
+            setTimeout(() => {
+                catGame.style.display = 'none';
+                createLoveHearts();
+            }, 500);
+        });
+
+        setInterval(() => {
+            if (gameActive) moveCat();
+        }, 2000);
+
+        // Love Hearts Explosion
+        function createLoveHearts() {
+            const container = document.getElementById('heartsContainer');
+            container.style.display = 'block';
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = ['💖', '💕', '💗', '💓', '💞'][Math.floor(Math.random() * 5)];
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 50);
+            }
+            
+            setTimeout(() => {
+                container.style.display = 'none';
+                showBirthdayScreen();
+            }, 3000);
+        }
+
+        // Show Birthday Screen
+        function showBirthdayScreen() {
+            document.getElementById('birthdayScreen').style.display = 'flex';
+            document.body.style.cursor = 'default';
+        }
+
+        // Initialize
+        createFloatingHearts();
+        document.body.style.cursor = 'none';
+    </script>
+</body>
+</html>
